@@ -6,7 +6,6 @@ import '../providers/app_state.dart';
 import '../models/models.dart';
 import '../widgets/widgets.dart';
 import 'scan_claim_screen.dart';
-import 'expense_screen.dart';
 import 'history_screen.dart';
 import 'fingerprint_screen.dart';
 import 'claims_screen.dart';
@@ -314,14 +313,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                     builder: (_) => const ClaimsScreen()));
                             _load();
                           },
-                        ),
-                        QuickAction(
-                          icon: Icons.upload_file_rounded,
-                          label: 'Upload\nReceipt',
-                          onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) => const ExpenseScreen())),
                         ),
                         QuickAction(
                           icon: Icons.school_rounded,
