@@ -1,0 +1,9 @@
+{
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "scholarwallet-verification",
+      "runtime": "nodejs20"
+    }
+  ]
+}
