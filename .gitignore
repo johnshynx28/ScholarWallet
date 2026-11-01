@@ -6,3 +6,5 @@ android/local.properties
 android/.gradle/
 
 backend/serviceAccountKey.json
+
+node_modules/
