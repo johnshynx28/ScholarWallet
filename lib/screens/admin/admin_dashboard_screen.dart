@@ -6,7 +6,6 @@ import '../../providers/app_state.dart';
 import '../../widgets/widgets.dart';
 import 'allowance_settings_screen.dart';
 import 'issue_payout_screen.dart';
-import 'expense_reports_screen.dart';
 import 'claims_monitor_screen.dart';
 import 'manage_scholars_screen.dart';
 import 'reports_screen.dart';
@@ -314,14 +313,6 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 12),
-            _control(Icons.receipt_long_outlined, 'Expense Reports (Receipts)',
-                () async {
-              await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (_) => const ExpenseReportsScreen()));
-            }),
             const SizedBox(height: 12),
             _control(Icons.assessment_outlined, 'Disbursement Reports',
                 () async {

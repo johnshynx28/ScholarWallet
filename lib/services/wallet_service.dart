@@ -1,8 +1,6 @@
 import 'dart:math';
-import 'dart:typed_data';
 
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:uuid/uuid.dart';
 
 import '../models/models.dart';
 
@@ -25,7 +23,6 @@ class WalletException implements Exception {
 ///  * There is NO withdrawal / cash-out / GCash request flow at all.
 class WalletService {
   final SupabaseClient _db = Supabase.instance.client;
-  static const String receiptBucket = 'receipts';
 
   final Random _rng = Random.secure();
 
@@ -294,53 +291,6 @@ class WalletService {
     return '${d.year}-${two(d.month)}-${two(d.day)} '
         '${two(d.hour)}:${two(d.minute)}';
   }
-
-  // --------------------------------------------------------------- expense
-  Future<String> uploadReceipt(
-      Uint8List bytes, String ext, String scholarId) async {
-    final e = ext.toLowerCase();
-    final path = '$scholarId/${const Uuid().v4()}.$e';
-    final contentType = e == 'png' ? 'image/png' : 'image/jpeg';
-    await _db.storage.from(receiptBucket).uploadBinary(
-          path,
-          bytes,
-          fileOptions: FileOptions(contentType: contentType),
-        );
-    return _db.storage.from(receiptBucket).getPublicUrl(path);
-  }
-
-  Future<void> submitExpense(ExpenseReport report) =>
-      _db.from('expenses').insert(report.toInsert());
-
-  Future<List<ExpenseReport>> getMyExpenses(String scholarId) async {
-    final rows = await _db
-        .from('expenses')
-        .select()
-        .eq('scholar_id', scholarId)
-        .order('created_at', ascending: false)
-        .limit(20);
-    return (rows as List)
-        .map((m) => ExpenseReport.fromMap(Map<String, dynamic>.from(m as Map)))
-        .toList();
-  }
-
-  Future<List<ExpenseReport>> getExpenses() async {
-    List rows;
-    try {
-      rows = await _db
-          .from('expenses')
-          .select('*, profiles(full_name)')
-          .order('id', ascending: false);
-    } catch (_) {
-      rows = await _db.from('expenses').select().order('id', ascending: false);
-    }
-    return rows
-        .map((m) => ExpenseReport.fromMap(Map<String, dynamic>.from(m as Map)))
-        .toList();
-  }
-
-  Future<void> setExpenseStatus(String id, String status) =>
-      _db.from('expenses').update({'status': status}).eq('id', id);
 
   // ---------------------------------------------------------------- admin
   Future<int> getActiveScholarCount() async {

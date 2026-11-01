@@ -241,68 +241,6 @@ class WalletTransaction {
       );
 }
 
-class ExpenseReport {
-  final String? id;
-  final String scholarId;
-  final String title;
-  final double amount;
-  final String category;
-  final String? description;
-  final String? receiptUrl;
-  final TxStatus status;
-  final String scholarName;
-  final DateTime? createdAt;
-
-  ExpenseReport({
-    this.id,
-    required this.scholarId,
-    required this.title,
-    required this.amount,
-    required this.category,
-    this.description,
-    this.receiptUrl,
-    this.status = TxStatus.pending,
-    this.scholarName = '',
-    this.createdAt,
-  });
-
-  factory ExpenseReport.fromMap(Map<String, dynamic> m) {
-    final profile = m['profiles'];
-    final raw = m['status'];
-    return ExpenseReport(
-      id: m['id']?.toString(),
-      scholarId: (m['scholar_id'] ?? '') as String,
-      title: (m['title'] ?? '') as String,
-      amount: ((m['amount'] ?? 0) as num).toDouble(),
-      category: (m['category'] ?? '') as String,
-      description: m['description'] as String?,
-      receiptUrl: m['receipt_url'] as String?,
-      status: raw == 'approved'
-          ? TxStatus.completed
-          : TxStatus.values.firstWhere(
-              (s) => s.name == raw,
-              orElse: () => TxStatus.pending,
-            ),
-      scholarName: profile is Map
-          ? ((profile['full_name'] ?? 'Scholar') as String)
-          : 'Scholar',
-      createdAt: m['created_at'] is String
-          ? DateTime.tryParse(m['created_at'] as String)
-          : null,
-    );
-  }
-
-  Map<String, dynamic> toInsert() => {
-        'scholar_id': scholarId,
-        'title': title,
-        'amount': amount,
-        'category': category,
-        'description': description,
-        'receipt_url': receiptUrl,
-        'status': status.name,
-      };
-}
-
 class Scholar {
   final String id;
   final String studentId;

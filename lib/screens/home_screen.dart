@@ -73,18 +73,8 @@ class _HomeScreenState extends State<HomeScreen> {
       await state.loadAllowanceSettings();
       final uid = state.user!.id;
       final txs = await state.wallet.getTransactions(uid, limit: 20);
-      final expenses = await state.wallet.getMyExpenses(uid);
       final items = <WalletTransaction>[
         ...txs,
-        ...expenses.map((e) => WalletTransaction(
-              id: e.id ?? '',
-              title: 'Expense: ${e.title}',
-              subtitle: e.category,
-              amount: -e.amount,
-              type: TxType.debit,
-              status: e.status,
-              createdAt: e.createdAt ?? DateTime.now(),
-            )),
       ];
       items.sort((a, b) => b.createdAt.compareTo(a.createdAt));
       _recent = items.take(4).toList();
