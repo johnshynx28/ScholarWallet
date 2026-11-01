@@ -291,22 +291,27 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             const SizedBox(height: 12),
             Row(
               children: [
-                _control(Icons.fact_check_outlined, 'Payout\nMonitor',
-                    () async {
-                  await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (_) => const ClaimsMonitorScreen()));
-                  _load();
-                }),
+                Expanded(
+                  child: _control(Icons.fact_check_outlined, 'Payout\nMonitor',
+                      () async {
+                    await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => const ClaimsMonitorScreen()));
+                    _load();
+                  }),
+                ),
                 const SizedBox(width: 12),
-                _control(Icons.group_outlined, 'Manage\nScholars', () async {
-                  await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (_) => const ManageScholarsScreen()));
-                  _load();
-                }),
+                Expanded(
+                  child: _control(Icons.group_outlined, 'Manage\nScholars',
+                      () async {
+                    await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => const ManageScholarsScreen()));
+                    _load();
+                  }),
+                ),
               ],
             ),
             const SizedBox(height: 12),
@@ -389,8 +394,14 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     );
   }
 
+  /// A tappable control tile. It fills the width it is given, so it works both
+  /// as a bare ListView child and inside an `Expanded` in a Row. It must NOT
+  /// return an `Expanded` itself: Expanded is only legal directly inside a
+  /// Row/Column/Flex, and putting it in a ListView crashes release builds
+  /// (the grey screen).
   Widget _control(IconData icon, String label, VoidCallback onTap) {
-    return Expanded(
+    return SizedBox(
+      width: double.infinity,
       child: OutlinedButton(
         onPressed: onTap,
         style: OutlinedButton.styleFrom(

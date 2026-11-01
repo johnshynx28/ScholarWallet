@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide User;
 import '../models/models.dart';
@@ -150,8 +151,12 @@ class AuthService {
       token = await user.getIdTokenResult(true);
     }
     if (token.claims?['role'] != 'authenticated') {
-      throw StateError('Firebase/Supabase authentication is not configured. '
-          'The administrator must deploy the authenticated-role claim function.');
+      debugPrint('Registration blocked: the Firebase token never received '
+          'role=authenticated. Deploy the assignSupabaseRole Cloud Function '
+          '(backend/functions) or run backend/claims_watcher.js.');
+      throw StateError('Registration is temporarily unavailable because the '
+          'server setup is not finished. Please contact the administrator '
+          'and try again later. (Error: AUTH-ROLE-CLAIM)');
     }
   }
 
@@ -178,6 +183,10 @@ class AuthService {
           return e.message ?? 'Authentication failed.';
       }
     }
+    // StateError / ArgumentError print as "Bad state: ..." / "Invalid
+    // argument(s): ..."; show only the message to the user.
+    if (e is StateError) return e.message;
+    if (e is ArgumentError) return '${e.message}';
     return e.toString();
   }
 }

@@ -3,7 +3,7 @@
     {
       "source": "functions",
       "codebase": "scholarwallet-verification",
-      "runtime": "nodejs20"
+      "runtime": "nodejs22"
     }
   ]
 }

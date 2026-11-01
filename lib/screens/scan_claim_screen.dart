@@ -336,10 +336,8 @@ class _ScanClaimScreenState extends State<ScanClaimScreen> {
                       child: OutlinedButton.icon(
                         onPressed: _manualEntry,
                         icon: const Icon(Icons.keyboard, size: 18),
-                        label: const Text('Code'),
-                        style: OutlinedButton.styleFrom(
-                            foregroundColor: Colors.white,
-                            side: const BorderSide(color: Colors.white38)),
+                        label: _actionLabel('Code'),
+                        style: _actionStyle(Colors.white, Colors.white38),
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -347,10 +345,8 @@ class _ScanClaimScreenState extends State<ScanClaimScreen> {
                       child: OutlinedButton.icon(
                         onPressed: _pickFromGallery,
                         icon: const Icon(Icons.photo_library_outlined, size: 18),
-                        label: const Text('Gallery'),
-                        style: OutlinedButton.styleFrom(
-                            foregroundColor: Colors.white,
-                            side: const BorderSide(color: Colors.white38)),
+                        label: _actionLabel('Gallery'),
+                        style: _actionStyle(Colors.white, Colors.white38),
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -366,17 +362,16 @@ class _ScanClaimScreenState extends State<ScanClaimScreen> {
                                 ? Icons.fingerprint
                                 : Icons.fingerprint_outlined,
                             size: 18),
-                        label: Text(state.fingerprintRegistered
+                        label: _actionLabel(state.fingerprintRegistered
                             ? 'Verified'
                             : 'Register'),
-                        style: OutlinedButton.styleFrom(
-                            foregroundColor: state.fingerprintRegistered
+                        style: _actionStyle(
+                            state.fingerprintRegistered
                                 ? AppTheme.successGreen
                                 : Colors.white,
-                            side: BorderSide(
-                                color: state.fingerprintRegistered
-                                    ? AppTheme.successGreen
-                                    : Colors.white38)),
+                            state.fingerprintRegistered
+                                ? AppTheme.successGreen
+                                : Colors.white38),
                       ),
                     ),
                   ],
@@ -388,4 +383,20 @@ class _ScanClaimScreenState extends State<ScanClaimScreen> {
       ),
     );
   }
+
+  /// Label for the bottom action buttons. Never wraps: it shrinks a little
+  /// instead (large system font sizes, narrow phones).
+  Widget _actionLabel(String text) => FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Text(text, maxLines: 1, softWrap: false),
+      );
+
+  /// Compact style so three buttons fit side by side. The default 16dp side
+  /// padding left only ~40dp for the text, which made it wrap letter by letter.
+  ButtonStyle _actionStyle(Color foreground, Color border) =>
+      OutlinedButton.styleFrom(
+        foregroundColor: foreground,
+        side: BorderSide(color: border),
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 12),
+      );
 }
